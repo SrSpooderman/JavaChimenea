@@ -1,13 +1,15 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class Main {
     public static void main (String args[]){
-        JFrame frame = new JFrame("Fuegito");
-        ScreenFire fire = new ScreenFire(1,200,500);
-        frame.add(fire);
-            frame.setSize(200,500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        FireTask et;
+
+        et = new FireTask();
+        et.playAnimation();
     }
 }

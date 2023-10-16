@@ -17,17 +17,18 @@ public class ScreenFire extends JPanel {
     public ScreenFire(int PixelSize, int width, int height){
         this.Width = width;
         this.Height = height;
+        setOpaque(false);
         setSize(this.Width, this.Height);
-        this.image = new BufferedImage(this.Width,this.Height,BufferedImage.TYPE_INT_RGB);
+        this.image = new BufferedImage(this.Width,this.Height,BufferedImage.TYPE_INT_ARGB);
         this.PixelSize = PixelSize;
 
-        this.temp = new Temperature(this.Width,this.Height,40,60);
-        this.temp.next();
+        this.temp = new Temperature(this.Width,this.Height,0.09,0.055); //cold 0,09 spark 0,055
         createPalete();
 
         Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                clearImage();
                 initScreen();
                 repaint();
             }
@@ -78,13 +79,12 @@ public class ScreenFire extends JPanel {
     private void clearImage(){
         for (int w=0; w<this.Width; w++){
             for (int h=0; h<this.Height; h++){
-                image.setRGB(w,h,0x00000000);
+                image.setRGB(w,h,new Color(0,0,0,0).getRGB());
             }
         }
     }
 
     private void initScreen() {
-        clearImage();
         this.temp.next();
         TempColorList color;
 
@@ -93,7 +93,7 @@ public class ScreenFire extends JPanel {
                 int temperature = this.temp.getTemperatures()[w][h];
                 if (temperature > 0){
                     color = paleta.findColorPalette(temperature);
-                    image.setRGB(w,(this.Height-1)-h, color.getColor().getRGB());
+                    image.setRGB(w,h, color.getColor().getRGB());
                 }
             }
         }
@@ -106,12 +106,12 @@ public class ScreenFire extends JPanel {
     }
 
     private void createPalete(){
-        paleta.addColorTarget(new TempColorList(252,new Color(247, 210, 106)));
-        paleta.addColorTarget(new TempColorList(210,new Color(250, 166, 57)));
-        paleta.addColorTarget(new TempColorList(168, new Color(250, 128, 17)));
-        paleta.addColorTarget(new TempColorList(126, new Color(242, 81, 1)));
-        paleta.addColorTarget(new TempColorList(84, new Color(197, 49, 1)));
-        paleta.addColorTarget(new TempColorList(42,new Color(131, 20, 3)));
+        paleta.addColorTarget(new TempColorList(54,new Color(0, 0, 0,100)));
+        paleta.addColorTarget(new TempColorList(59,new Color(155, 0, 0,110)));
+        paleta.addColorTarget(new TempColorList(72,new Color(200, 100, 0,180)));
+        paleta.addColorTarget(new TempColorList(112,new Color(235,235 , 40,250)));
+        paleta.addColorTarget(new TempColorList(129,new Color(255, 255, 200,255)));
+        paleta.addColorTarget(new TempColorList(149,new Color(255, 255, 255,255)));
         paleta.calc();
     }
 }

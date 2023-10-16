@@ -10,8 +10,7 @@ public class Palette {
 
     /*Constructor*/
     public Palette() {
-        colorsTarget.add(new TempColorList(255,new Color(255,255,255,1)));
-        colorsTarget.add(new TempColorList(1,new Color(99, 11, 1)));
+
     }
 
     /*Metodos*/
@@ -67,9 +66,13 @@ public class Palette {
             bdiff = first.getColor().getBlue()+bdiff*pasada;
         } else {bdiff = first.getColor().getBlue()-bdiff*pasada;};
 
+        double adiff = Math.abs(first.getColor().getAlpha()-last.getColor().getAlpha()) /(double)diff;
+        if (first.getColor().getAlpha() < last.getColor().getAlpha()){
+            adiff = first.getColor().getAlpha()+adiff*pasada;
+        } else {adiff = first.getColor().getAlpha()-adiff*pasada;};
 
         result.setTemperature(first.getTemperature()+pasada );
-        result.setColor(new Color((int)rdiff,(int)gdiff,(int)bdiff,1));
+        result.setColor(new Color((int)rdiff,(int)gdiff,(int)bdiff,(int)adiff));
         return result;
     }
 

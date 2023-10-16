@@ -4,10 +4,10 @@ public class Temperature {
     private int [][]Temperatures;
     private int Height;
     private int Width;
-    private int ColdPoints;
-    private int SparkPoints;
+    private double ColdPoints;
+    private double SparkPoints;
 
-    public Temperature(int width, int height, int cold, int spark){
+    public Temperature(int width, int height, double cold, double spark){
         this.Height = height;
         this.Width = width;
         this.ColdPoints = cold;
@@ -39,7 +39,7 @@ public class Temperature {
         Width = width;
     }
 
-    public int getColdPoints() {
+    public double getColdPoints() {
         return ColdPoints;
     }
 
@@ -47,7 +47,7 @@ public class Temperature {
         ColdPoints = coldPoints;
     }
 
-    private int getSparkPoints() {
+    private double getSparkPoints() {
         return SparkPoints;
     }
 
@@ -56,24 +56,22 @@ public class Temperature {
     }
 
     private void calc(){
-        for (int h = getHeight()-1; h>=1;h--){
-            for (int w=0; w<getWidth(); w++){
-                int avg = 0;
-                int div = 3;
+        for (int h=getHeight()-2; h>4; h--){
+            for (int w=2; w<getWidth()-2; w++){
+                double newTemp = (
+                        ((double) getTemperatures()[w][h] * 1.5D +
+                                (double) getTemperatures()[w + 1][h] * 1.2D +
+                                (double) getTemperatures()[w - 1][h] * 1.2D +
+                                (double) getTemperatures()[w][h + 1] * 0.7D +
+                                (double) getTemperatures()[w + 1][h + 1] * 0.7D +
+                                (double) getTemperatures()[w - 1][h + 1] * 0.7D) / 5.98569D-0.8);
+                getTemperatures()[w][h] = (int) newTemp;
 
-                avg += getTemperatures()[w][h-1];
-                try {
-                    avg += getTemperatures()[w+1][h-1];
-                }catch (ArrayIndexOutOfBoundsException e) {
-                    div = 2;
+                if (getTemperatures()[w][h] < 0){
+                    getTemperatures()[w][h] = 0;
+                } else if (getTemperatures()[w][h] > 255) {
+                    getTemperatures()[w][h] = 255;
                 }
-                try {
-                    avg += getTemperatures()[w-1][h-1];
-                }catch (ArrayIndexOutOfBoundsException e) {
-                    div = 2;
-                }
-                avg = avg/div;
-                getTemperatures()[w][h] = avg;
             }
         }
     }
@@ -82,9 +80,9 @@ public class Temperature {
         Random rd = new Random();
 
         for (int w=0; w<getWidth(); w++){
-            int randomNumber = rd.nextInt(100+1);
+            double randomNumber = rd.nextDouble();
             if (randomNumber < getSparkPoints()){
-                this.Temperatures[w][0] = 255;
+                this.Temperatures[w][getHeight()-1] = 255;
             }
         }
     }
@@ -93,16 +91,16 @@ public class Temperature {
         Random rd = new Random();
 
         for (int w=0; w<getWidth(); w++){
-            int randomNumber = rd.nextInt(100+1);
+            double randomNumber = rd.nextDouble();
             if (randomNumber < getColdPoints()){
-                this.Temperatures[w][0] = 1;
+                this.Temperatures[w][getHeight()-1] = 0;
             }
         }
     }
 
     public void show(){
         String result = "Plantilla \n";
-        for (int h = getHeight()-1; h>=0;h--){
+        for (int h=0; h<getHeight();h++){
             for (int w = 0; w < getWidth(); w++){
                 result += "["+getTemperatures()[w][h]+"]";
             }
